@@ -106,7 +106,7 @@ def xor_brute(string_to_decode, maxkeylen, ret_num = 20):
 
       if long_count > longest:
         longest = long_count
-
+        
       top_count_output.append((eng_count, key, output))
       longest_output.append((long_count, key, output))
 
