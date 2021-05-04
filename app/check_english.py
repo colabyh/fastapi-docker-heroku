@@ -82,6 +82,10 @@ def get_eng_counts(output):
     long_count = find_longest_english_embedded(output.decode("ascii"))
     _, eng_count = find_num_english(output.decode("ascii"))
   except:
-    pass
+    try:
+      long_count = find_longest_english_embedded(str(output))
+      _, eng_count = find_num_english(str(output))
+    except:
+      pass
 
   return eng_count, long_count

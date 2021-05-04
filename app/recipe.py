@@ -16,7 +16,7 @@ def xor_guess_keylen(string_to_decode, charset, ret_num = 1):
   #print(keylen, fitness)
   if fitness < 1:
     print("Cannot guess key length")
-    return
+    return None
 
   keys = [bytearray(x) for x in xor_base64.smart_xorkeys(string_to_decode, keylen, charset)]
   outputs = [xor_base64.xor(string_to_decode, key) for key in keys]
@@ -144,11 +144,11 @@ def auto_deobf(string_to_decode, maxlen, ret_num = 1, early_stop_count = 3, earl
 
   longest_output = []
   longest = 0
-
+  print(string_to_decode)
   eng_count, long_count = check_english.get_eng_counts(string_to_decode)
   top_count_output.append((eng_count, b'base64', string_to_decode))
   longest_output.append((long_count, b'base64', string_to_decode))
-
+  print( eng_count, long_count)
   if eng_count > top_count:
     top_count = eng_count
 
@@ -163,6 +163,7 @@ def auto_deobf(string_to_decode, maxlen, ret_num = 1, early_stop_count = 3, earl
       longest_output.sort(reverse = True)
 
     print("Early stop at Base64")
+    
     return top_count_output[:min(ret_num,len(top_count_output))], \
     longest_output[:min(ret_num,len(longest_output))]
 
