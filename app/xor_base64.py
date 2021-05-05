@@ -1,5 +1,6 @@
 import base64
 import itertools
+import check_english
 #XOR related functions
 charset = set(b'0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ!"#$%&\'()*+,-./:;<=>?@[\\]^_`{|}~ \t\n\r')
 charset_base64 = set(b'0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ+/=')
@@ -68,7 +69,8 @@ def isBase64(sb):
 
 def base64_recursive_decode(encoded):
   decoded = encoded
-  while(isBase64(decoded)):
+
+  if(isBase64(decoded)):
     decoded = base64.b64decode(decoded)
 
   return decoded

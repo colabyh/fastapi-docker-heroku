@@ -49,10 +49,16 @@ def xor_guess_keylen(string_to_decode, charset, ret_num = 1):
   return longest_output[:min(ret_num,len(longest_output))], \
   top_count_output[:min(ret_num,len(top_count_output))]
 
-def xor_fast(string_to_decode, keylen, charset_fast, ret_num = 1):
+def xor_fast(string_to_decode, keylen, choose_charset, ret_num = 1):
   """
   knowledge of keylen and decoded char set
   """
+
+  charset_fast = charset
+
+  if choose_charset == 1:
+    charset_fast = charset_base64
+
   keys = [bytearray(x) for x in xor_base64.smart_xorkeys(string_to_decode, keylen, charset_fast)]
   outputs = [xor_base64.xor(string_to_decode, key) for key in keys]
   top_count_output = []
@@ -62,7 +68,10 @@ def xor_fast(string_to_decode, keylen, charset_fast, ret_num = 1):
   longest = 0
 
   for key, output in zip(keys, outputs):
-    output = xor_base64.base64_recursive_decode(output)
+
+    if choose_charset == 1:
+      output = xor_base64.base64_recursive_decode(output)
+
     eng_count, long_count = check_english.get_eng_counts(output)
 
     if eng_count > top_count:
@@ -137,18 +146,18 @@ def auto_deobf(string_to_decode, maxlen, ret_num = 1, early_stop_count = 3, earl
     pass
 
   print("Start base64")
-  string_to_decode = xor_base64.base64_recursive_decode(string_to_decode)
+  string_to_decode64 = xor_base64.base64_recursive_decode(string_to_decode)
   
   top_count_output = []
   top_count = 0
 
   longest_output = []
   longest = 0
-  print(string_to_decode)
-  eng_count, long_count = check_english.get_eng_counts(string_to_decode)
-  top_count_output.append((eng_count, b'base64', string_to_decode))
-  longest_output.append((long_count, b'base64', string_to_decode))
-  print( eng_count, long_count)
+  
+  eng_count, long_count = check_english.get_eng_counts(string_to_decode64)
+  top_count_output.append((eng_count, b'base64', string_to_decode64))
+  longest_output.append((long_count, b'base64', string_to_decode64))
+
   if eng_count > top_count:
     top_count = eng_count
 
@@ -164,8 +173,11 @@ def auto_deobf(string_to_decode, maxlen, ret_num = 1, early_stop_count = 3, earl
 
     print("Early stop at Base64")
     
-    return top_count_output[:min(ret_num,len(top_count_output))], \
-    longest_output[:min(ret_num,len(longest_output))]
+    # return top_count_output[:min(ret_num,len(top_count_output))], \
+    # longest_output[:min(ret_num,len(longest_output))]
+
+    return longest_output[:min(ret_num,len(longest_output))], \
+    top_count_output[:min(ret_num,len(top_count_output))]
 
   #test if XOR output is base64
   print("Start XOR output is base64")
@@ -194,8 +206,11 @@ def auto_deobf(string_to_decode, maxlen, ret_num = 1, early_stop_count = 3, earl
       longest_output.sort(reverse = True)
 
     print("Early stop at XOR output base64")
-    return top_count_output[:min(ret_num,len(top_count_output))], \
-    longest_output[:min(ret_num,len(longest_output))]
+    # return top_count_output[:min(ret_num,len(top_count_output))], \
+    # longest_output[:min(ret_num,len(longest_output))]
+
+    return longest_output[:min(ret_num,len(longest_output))], \
+    top_count_output[:min(ret_num,len(top_count_output))]
 
   #test guess keylen
   print("Start guess keylen")
@@ -228,8 +243,11 @@ def auto_deobf(string_to_decode, maxlen, ret_num = 1, early_stop_count = 3, earl
         longest_output.sort(reverse = True)
 
       print("Early stop at guess keylen")
-      return top_count_output[:min(ret_num,len(top_count_output))], \
-      longest_output[:min(ret_num,len(longest_output))]
+      # return top_count_output[:min(ret_num,len(top_count_output))], \
+      # longest_output[:min(ret_num,len(longest_output))]
+
+      return longest_output[:min(ret_num,len(longest_output))], \
+      top_count_output[:min(ret_num,len(top_count_output))]
 
   #test if XOR output is English
   print("Start XOR output is English")
@@ -238,8 +256,11 @@ def auto_deobf(string_to_decode, maxlen, ret_num = 1, early_stop_count = 3, earl
     outputs = [xor_base64.xor(string_to_decode, key) for key in keys]
 
     for key, output in zip(keys, outputs):
-      
+
       eng_count, long_count = check_english.get_eng_counts(output)
+
+      if output == b"test":
+        print(eng_count, long_count)
 
       if eng_count > top_count:
         top_count = eng_count
@@ -258,8 +279,10 @@ def auto_deobf(string_to_decode, maxlen, ret_num = 1, early_stop_count = 3, earl
       longest_output.sort(reverse = True)
 
     print("Early stop at XOR output English")
-    return top_count_output[:min(ret_num,len(top_count_output))], \
-    longest_output[:min(ret_num,len(longest_output))]
+    # return top_count_output[:min(ret_num,len(top_count_output))], \
+    # longest_output[:min(ret_num,len(longest_output))]
+    return longest_output[:min(ret_num,len(longest_output))], \
+      top_count_output[:min(ret_num,len(top_count_output))]
 
   #didn't find anything brute force
   print("Start bruteforce")

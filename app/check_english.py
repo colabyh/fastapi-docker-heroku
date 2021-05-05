@@ -3,7 +3,6 @@ nltk.download('wordnet')
 from nltk.stem.wordnet import WordNetLemmatizer
 lemmatizer = WordNetLemmatizer() 
 import string
-import xor_base64
 from urllib.request import urlopen
 
 punctuation = set(string.punctuation)
