@@ -185,8 +185,8 @@ def auto_deobf(string_to_decode, maxlen, ret_num = 1, early_stop_count = 3, earl
     keys = [bytearray(x) for x in xor_base64.smart_xorkeys(string_to_decode, keylen, charset_base64)]
     outputs = [xor_base64.xor(string_to_decode, key) for key in keys]
 
-    if (len(keys)>2000):
-      continue
+    # if (len(keys)>2000):
+    #   continue
 
     for key, output in zip(keys, outputs):
       output = xor_base64.base64_recursive_decode(output)
@@ -257,8 +257,8 @@ def auto_deobf(string_to_decode, maxlen, ret_num = 1, early_stop_count = 3, earl
     keys = [bytearray(x) for x in xor_base64.smart_xorkeys(string_to_decode, keylen, charset)]
     outputs = [xor_base64.xor(string_to_decode, key) for key in keys]
 
-    if (len(keys)>2000):
-      continue
+    # if (len(keys)>2000):
+    #   continue
 
     for key, output in zip(keys, outputs):
 
