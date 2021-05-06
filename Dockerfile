@@ -4,3 +4,5 @@ COPY requirements.txt ./app/main.py ./app/guess_xor_length.py ./app/recipe.py ./
 RUN pip install --no-cache-dir -r requirements.txt
 
 COPY ./app /app
+
+CMD ["uvicorn", "main:app", "--host", "0.0.0.0", "--port", "443"]
